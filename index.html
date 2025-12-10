@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MC Free</title>
+
+<style>
+  :root {
+    --primary: #43a047;
+    --primary-dark: #2e7d32;
+    --whatsapp: #25D366;
+    --whatsapp-dark: #128C7E;
+    --radius: 16px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)),
+      url('https://raw.githubusercontent.com/thiagowiegert/Minecraft-Free/refs/heads/main/releases/minecraft.jpg') center/cover fixed;
+    color: white;
+    min-height: 100vh;
+    padding: 5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .content {
+    background: rgba(255,255,255,0.05);
+    padding: clamp(1rem, 4vw, 2rem);
+    border-radius: var(--radius);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    color: var(--primary);
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+  }
+
+  .subtitle {
+    opacity: 0.9;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Estilo del menú desplegable */
+  .version-box {
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .version-label {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  select {
+    width: 100%;
+    padding: 0.9rem;
+    margin-top: 0.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    backdrop-filter: blur(5px);
+  }
+
+  select option {
+    color: black;
+  }
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .btn {
+    background-color: var(--primary);
+    color: white;
+    padding: clamp(0.8rem, 3.5vw, 1rem);
+    border-radius: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+  }
+
+  .btn-whatsapp {
+    background-color: var(--whatsapp);
+  }
+
+  .btn-whatsapp:hover {
+    background-color: var(--whatsapp-dark);
+  }
+
+  footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    opacity: 0.7;
+    font-size: clamp(0.8rem, 3vw, 1rem);
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+  <div class="container">
+    <main class="content">
+      <h1>MC Free</h1>
+      <p class="subtitle">Descarga cualquier versión desde nuestros servidores</p>
+
+      <!-- MENÚ DESPLEGABLE DE VERSIONES -->
+<div class="version-box">
+  <label class="version-label">Elige una versión:</label>
+  <select id="versionSelector">
+      <option>Cargando versiones...</option>
+  </select>
+</div>
+
+      <div class="button-container">
+
+        <!-- BOTÓN QUE CAMBIA SEGÚN LA VERSIÓN -->
+        <a id="downloadBtn" href="#" class="btn">
+          <i class="fas fa-cloud-download-alt"></i> Descargar Versión Seleccionada
+        </a>
+
+        <a href="https://whatsapp.com/channel/0029Vb6os8sEquiSiC9mHw1M" 
+           class="btn btn-whatsapp" 
+           target="_blank">
+          <i class="fab fa-whatsapp"></i> Canal de WhatsApp
+        </a>
+      </div>
+
+    </main>
+
+    <footer>
+      © 2025 Minecraft Free<br>
+      Página v1.1
+    </footer>
+  </div>
+
+<script>
+  const selector = document.getElementById("versionSelector");
+  const btn = document.getElementById("downloadBtn");
+
+  // URL del archivo JSON en GitHub (cámbiala por la tuya)
+  const jsonURL = "https://raw.githubusercontent.com/thiagowiegert/Minecraft-Free/refs/heads/main/versions.json";
+
+  // Cargar el JSON automáticamente
+  fetch(jsonURL)
+    .then(res => res.json())
+    .then(data => {
+      selector.innerHTML = ""; // limpiar
+
+      data.versions.forEach(v => {
+        const option = document.createElement("option");
+        option.value = v.url;
+        option.textContent = v.name;
+        selector.appendChild(option);
+      });
+
+      // Poner la primera versión como descarga por defecto
+      btn.href = data.versions[0].url;
+    })
+    .catch(err => {
+      selector.innerHTML = "<option>Error al cargar versiones</option>";
+      console.error(err);
+    });
+
+  // Cambiar el enlace cuando el usuario elige otra versión
+  selector.addEventListener("change", () => {
+    btn.href = selector.value;
+  });
+</script>
+
+</body>
+</html>

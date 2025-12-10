@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Releases | Minecraft Free</title>
+  <style>
+    :root {
+      /* Colores primarios de la página de releases (verdes) */
+      --primary: #43a047; /* Verde principal, igual que en la home para consistencia */
+      --primary-dark: #2e7d32; /* Verde oscuro para hover, igual que en la home */
+
+      /* Colores secundarios o de acento (puedes ajustar si es necesario) */
+      --secondary: #0288d1; /* Azul, como estaba definido antes, puede usarse para otros elementos si se desea */
+
+      /* Colores base */
+      --dark-bg-transparent: rgba(0, 0, 0, 0.6); /* Fondo oscuro para tarjetas de versión */
+      --header-bg: rgba(46, 125, 50, 0.85); /* Fondo para el header, ligeramente más transparente */
+      --light-text: #f5f5f5; /* Texto claro */
+      --footer-bg: rgba(0,0,0,0.2); /* Fondo sutil para el footer */
+
+      /* Colores para anuncios (si se mantienen) */
+      --ad-bg: rgba(30, 30, 30, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)),
+        url('https://raw.githubusercontent.com/thiagowiegert/Minecraft-Free/refs/heads/main/releases/minecraft.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--light-text);
+      min-height: 100vh;
+      padding: 20px; /* Espacio alrededor del contenedor principal */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Centra el .container */
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px; /* Espacio entre header, main, footer */
+      margin: auto; /* Asegura centrado */
+    }
+
+    /* Estilo del Header específico para la página de Releases */
+    header {
+      background-color: var(--header-bg);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      border-radius: 10px; /* Bordes redondeados más suaves */
+      /* animation: fadeInUp 0.8s ease both; Podríamos añadirlo si queremos que el header también se anime */
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      color: var(--light-text); /* Asegurar contraste */
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    }
+
+    main { /* Contenedor principal para el contenido específico de la página */
+        width: 100%;
+    }
+
+    /* Estilos para las tarjetas de versión */
+    .version-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .version {
+      background-color: var(--dark-bg-transparent);
+      border: 1px solid var(--primary); /* Borde más sutil */
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInUp 1s ease both; /* Animación de la home */
+    }
+
+    .version:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(var(--primary), 0.2); /* Sombra con color primario */
+    }
+
+    .version h2 {
+      margin: 0 0 15px 0;
+      color: var(--primary); /* Usar el color primario para el título de la versión */
+      font-size: 1.5rem;
+    }
+
+    /* Estilo de botón adaptado del CSS anterior */
+    .download-btn {
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 0.9rem 1.5rem;
+      border-radius: 12px;
+      font-weight: bold;
+      display: inline-block; /* Cambiado de flex a inline-block para este contexto */
+      text-align: center;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 220px; /* Ancho máximo para el botón */
+    }
+
+    .download-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    /* --- Estilos de Anuncios (mantenidos de tu CSS original de releases) --- */
+    .ad-horizontal {
+      width: 100%;
+      background: var(--ad-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 20px 0; /* Margen para separar de otros contenidos */
+      display: flex; /* Para centrar el .ad-container */
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ad-horizontal .ad-container { /* Este es el contenedor del script del anuncio */
+      min-height: 90px; /* Altura mínima para el anuncio */
+      width:100%; /* Ocupa el espacio disponible en .ad-horizontal */
+      max-width: 728px; /* Ejemplo: para un leaderboard de 728x90 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Si usas iframes directamente para anuncios, estos estilos aplican */
+    .ad-frame {
+      width: 100%;
+      max-width: 800px; /* O el tamaño que necesites */
+      height: 90px; /* O el tamaño que necesites */
+      margin: 0 auto; /* Centrar el iframe */
+    }
+
+    .ad-frame iframe {
+      border: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: transparent;
+    }
+
+    /* --- Fin Estilos de Anuncios --- */
+
+    /* Footer consolidado y estilizado como en la página principal */
+    .main-footer {
+      text-align: center;
+      font-size: 0.85rem;
+      /* margin-top: 2rem; El gap del .container ya maneja esto */
+      opacity: 0.85; /* Un poco más visible */
+      padding: 1.5rem; /* Más padding */
+      background: var(--footer-bg);
+      border-radius: 10px; /* Coherente con otros bordes */
+      width: 100%; /* Asegura que ocupe el ancho del .container */
+    }
+
+    .main-footer p {
+        margin-bottom: 0.6rem;
+    }
+    .main-footer p:last-child {
+        margin-bottom: 0;
+    }
+
+    .main-footer .boton { /* .boton ahora es específico para .main-footer a */
+      color: var(--primary); /* Usar el color primario para enlaces del footer */
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .main-footer .boton:hover {
+        text-decoration: underline;
+    }
+
+    .page-version {
+        margin-top: 1rem;
+        font-size: 0.8rem;
+        opacity: 0.7;
+    }
+
+    /* Animación fadeInUp (tomada del CSS anterior) */
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      .version-container {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+      }
+      .download-btn {
+        max-width: 100%; /* Botón ocupa más ancho en móvil */
+      }
+      .ad-horizontal .ad-container { /* Ajustar altura para anuncios móviles si es necesario */
+        min-height: 60px;
+      }
+      .ad-frame { /* Si usas iframes directamente */
+        height: 60px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <h1>Versiones de Minecraft</h1> </header>
+
+    <main> <div class="version-container">
+          <div class="version">
+            <h2>1.21.81.2</h2>
+            <a href="https://shortox.com/x3OcQom" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.80.3</h2>
+            <a href="https://gplinks.co/StwTlIX" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.72.01</h2>
+            <a href="https://shrtlk.biz/82fFK" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.43.01</h2>
+            <a href="https://linkrex.net/hrE7u3E" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.41.01</h2>
+            <a href="https://exe.io/ZsQPYN" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.31.04</h2>
+            <a href="https://ouo.io/ty9Imc" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.30.03</h2>
+            <a href="https://www.oke.io/mjXSOT" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.22.01</h2>
+            <a href="https://link-target.net/1133981/minecraft-1212201-apk" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.21.01</h2>
+            <a href="https://shortox.com/4XKV" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.2.02</h2>
+            <a href="https://gplinks.co/mvDpH" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.1.03</h2>
+            <a href="https://shrtlk.biz/82fdw" class="download-btn">Descargar</a>
+          </div>
+
+          <div class="version">
+            <h2>1.21.0.03</h2>
+            <a href="https://linkrex.net/vgKSK" class="download-btn">Descargar</a>
+          </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+      <p>
+        Copyright © 2025 <a href="https://minecraftfree.vercel.app" target="_blank" rel="noopener noreferrer" class="boton">Minecraft Free.</a> Todos los derechos reservados.
+      </p>
+      <p>
+        Powered by <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="boton">Vercel</a> |
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="boton">GitHub</a>
+      </p>
+      <p>
+        Minecraft es una marca registrada de Mojang Studios. Este sitio no está afiliado con Mojang/Microsoft.
+      </p>
+      <p class="page-version">Página De Releases Versión: 2.4</p>
+    </footer>
+
+  </div>
+</body>
+</html>
