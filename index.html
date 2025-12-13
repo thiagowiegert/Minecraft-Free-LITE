@@ -83,14 +83,12 @@
   <h1>MC Free LITE</h1>
   <p>Descarga cualquier versión</p>
 
-  <!-- MENÚ DESPLEGABLE AUTOGENERADO -->
+  <!-- MENÚ DESPLEGABLE -->
   <label class="select-label">Elige una versión:</label>
   <select id="versionSelector"></select>
 
   <!-- BOTÓN -->
-  <a id="downloadBtn" class="btn" href="#">
-    Descargar APK
-  </a>
+  <a id="downloadBtn" class="btn" href="#">Descargar APK</a>
 
   <a class="btn btn-whatsapp" href="https://whatsapp.com/channel/0029Vb6os8sEquiSiC9mHw1M" target="_blank">
     Canal de WhatsApp
@@ -106,23 +104,31 @@
   const selector = document.getElementById("versionSelector");
   const btn = document.getElementById("downloadBtn");
 
-  async function loadVersions() {
+  async function loadReleases() {
     try {
-      const res = await fetch("https://raw.githubusercontent.com/thiagowiegert/Minecraft-Free-LITE/refs/heads/main/versions.json");
-      const data = await res.json();
+      const res = await fetch("https://api.github.com/repos/thiagowiegert/Mine-LITE-Api/releases");
+      const releases = await res.json();
 
-      data.forEach(v => {
+      // Ordenar por fecha (más nueva primero)
+      releases.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+
+      releases.forEach(rel => {
+        if (!rel.assets.length) return; // Saltar releases sin archivos
+
+        const apk = rel.assets[0].browser_download_url;
+
         const op = document.createElement("option");
-        op.value = v.url;
-        op.textContent = v.name;
+        op.value = apk;
+        op.textContent = rel.tag_name || rel.name;
         selector.appendChild(op);
       });
 
-      // Selecciona la primera version automáticamente
-      btn.href = data[0].url;
+      if (releases.length > 0) {
+        btn.href = releases[0].assets[0].browser_download_url;
+      }
 
-    } catch (err) {
-      alert("Error cargando versiones.");
+    } catch (e) {
+      alert("Error cargando Releases de GitHub");
     }
   }
 
@@ -130,7 +136,7 @@
     btn.href = selector.value;
   });
 
-  loadVersions();
+  loadReleases();
 </script>
 
 </body>
