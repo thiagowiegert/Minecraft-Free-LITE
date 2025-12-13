@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MC Free LITE</title>
+<title>Mine-LITE-Api</title>
 
 <style>
   body {
@@ -80,12 +80,15 @@
 <body>
 
 <div class="box">
-  <h1>MC Free LITE</h1>
-  <p>Descarga cualquier versión</p>
+  <h1>Mine-LITE-Api</h1>
+  <p>Descarga cualquier versión desde nuestros Servidores.</p>
 
   <!-- MENÚ DESPLEGABLE -->
   <label class="select-label">Elige una versión:</label>
   <select id="versionSelector"></select>
+<div id="info" style="text-align:left; font-size:0.85rem; opacity:0.85; margin-bottom:12px;">
+  Selecciona una versión para ver detalles
+</div>
 
   <!-- BOTÓN -->
   <a id="downloadBtn" class="btn" href="#">Descargar APK</a>
@@ -101,42 +104,71 @@
 </div>
 
 <script>
-  const selector = document.getElementById("versionSelector");
-  const btn = document.getElementById("downloadBtn");
+const selector = document.getElementById("versionSelector");
+const btn = document.getElementById("downloadBtn");
+const info = document.getElementById("info");
 
-  async function loadReleases() {
-    try {
-      const res = await fetch("https://api.github.com/repos/thiagowiegert/Mine-LITE-Api/releases");
-      const releases = await res.json();
+async function loadReleases() {
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/thiagowiegert/Mine-LITE-Api/releases"
+    );
+    const releases = await res.json();
 
-      // Ordenar por fecha (más nueva primero)
-      releases.sort((a, b) => new Date(b.published_at) - new Date(a.published_at));
+    selector.innerHTML = "";
 
-      releases.forEach(rel => {
-        if (!rel.assets.length) return; // Saltar releases sin archivos
+    // Ordenar por fecha (más nuevo primero)
+    releases.sort(
+      (a, b) => new Date(b.published_at) - new Date(a.published_at)
+    );
 
-        const apk = rel.assets[0].browser_download_url;
+    releases.forEach(rel => {
+      if (!rel.assets || rel.assets.length === 0) return;
 
-        const op = document.createElement("option");
-        op.value = apk;
-        op.textContent = rel.tag_name || rel.name;
-        selector.appendChild(op);
-      });
+      const apk = rel.assets.find(a => a.name.endsWith(".apk"));
+      if (!apk) return;
 
-      if (releases.length > 0) {
-        btn.href = releases[0].assets[0].browser_download_url;
-      }
+      const option = document.createElement("option");
+      option.value = apk.browser_download_url;
+      option.textContent = rel.tag_name || rel.name || "Versión sin nombre";
 
-    } catch (e) {
-      alert("Error cargando Releases de GitHub");
+      // Datos extra
+      option.dataset.size =
+        (apk.size / 1024 / 1024).toFixed(2) + " MB";
+      option.dataset.date =
+        new Date(rel.published_at).toLocaleDateString();
+      option.dataset.notes =
+        rel.body ? rel.body.replace(/\n/g, "<br>") : "Sin notas";
+
+      selector.appendChild(option);
+    });
+
+    if (selector.options.length > 0) {
+      selector.selectedIndex = 0;
+      updateInfo();
     }
+
+  } catch (e) {
+    info.innerHTML = "❌ Error cargando versiones";
+    console.error(e);
   }
+}
 
-  selector.addEventListener("change", () => {
-    btn.href = selector.value;
-  });
+function updateInfo() {
+  const opt = selector.selectedOptions[0];
 
-  loadReleases();
+  btn.href = opt.value;
+
+  info.innerHTML = `
+    <strong>📝 Notas:</strong><br>${opt.dataset.notes}<br><br>
+    <strong>📦 Tamaño:</strong> ${opt.dataset.size}<br>
+    <strong>📅 Lanzamiento:</strong> ${opt.dataset.date}
+  `;
+}
+
+selector.addEventListener("change", updateInfo);
+
+loadReleases();
 </script>
 
 </body>
