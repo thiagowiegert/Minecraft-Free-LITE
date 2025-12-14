@@ -2,110 +2,139 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mine-LITE-Api</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #000 url('https://i.imgur.com/CFc3sKb.jpeg') center/cover fixed no-repeat;
-  color: #fff;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+:root{
+  --primary:#43a047;
+  --primary-dark:#2e7d32;
+  --whatsapp:#25D366;
+  --whatsapp-dark:#128C7E;
+  --bg:#292929;
 }
 
-.box {
-  background: rgba(0,0,0,0.65);
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  width: 100%;
-  max-width: 350px;
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(rgba(0,0,0,.60),rgba(0,0,0,.7)),
+  url('https://i.imgur.com/CFc3sKb.jpeg') center/cover fixed;
+  color:#fff;
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-h1 {
-  color: #43a047;
-  margin-bottom: 10px;
+.box{
+  background:var(--panel);
+  padding:25px;
+  width:100%;
+  max-width:350px;
+  text-align:center;
+  max-height:90vh;
+  overflow:hidden;
 }
 
-.badge {
-  display: none;
-  background: gold;
-  color: black;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 6px;
-  margin-left: 6px;
-  font-weight: bold;
+h1{
+  color:var(--primary);
+  margin-bottom:10px;
 }
 
-.select-label {
-  text-align: left;
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin-bottom: 4px;
+.badge{
+  display:none;
+  background:gold;
+  color:#000;
+  font-size:.7rem;
+  padding:2px 6px;
+  border-radius:6px;
+  margin-left:6px;
+  font-weight:bold;
 }
 
-select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  margin-bottom: 10px;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  font-size: 1rem;
-}
-
-select option {
-  color: #000;
-}
-
-#info {
+.select-label{
   text-align:left;
-  font-size:0.85rem;
-  opacity:0.85;
+  font-size:.9rem;
+  opacity:.9;
+  margin-bottom:4px;
+}
+
+select{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  margin-bottom:10px;
+  background:#2a2a2a;
+  color:#fff;
+  font-size:1rem;
+}
+
+select option{color:#000}
+
+#info{
+  text-align:left;
+  font-size:.85rem;
+  opacity:.85;
   margin-bottom:12px;
+  max-height:160px;
+  overflow-y:auto;
+  padding-right:6px;
 }
 
-.btn {
-  display: block;
-  background: #43a047;
-  color: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  margin: 10px 0;
-  text-decoration: none;
-  font-weight: bold;
+#info::-webkit-scrollbar{
+  width:6px;
+}
+#info::-webkit-scrollbar-thumb{
+  background:var(--primary);
+  border-radius:10px;
 }
 
-.btn-whatsapp {
-  background: #25D366;
+.btn{
+  display:block;
+  background:var(--primary);
+  color:#fff;
+  padding:12px;
+  border-radius:8px;
+  margin:10px 0;
+  text-decoration:none;
+  font-weight:bold;
+  transition:.2s;
 }
 
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #43a047;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: bold;
-  display: none;
-  z-index: 999;
+.btn:hover{background:var(--primary-dark)}
+
+.btn-whatsapp{
+  background:var(--whatsapp);
 }
 
-footer {
-  margin-top: 12px;
-  opacity: 0.7;
-  font-size: 0.8rem;
-  line-height: 1.3rem;
+.btn-whatsapp:hover{
+  background:var(--whatsapp-dark);
+}
+
+.toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--primary);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:20px;
+  font-size:.9rem;
+  font-weight:bold;
+  display:none;
+  z-index:999;
+}
+
+footer{
+  margin-top:12px;
+  opacity:.65;
+  font-size:.8rem;
+  line-height:1.3rem;
 }
 </style>
 </head>
@@ -153,76 +182,74 @@ const toast = document.getElementById("toast");
 
 const LAST_SEEN = "liteLastSeenRelease";
 
-async function loadReleases() {
-  try {
+async function loadReleases(){
+  try{
     const res = await fetch(
       `https://api.github.com/repos/${repo}/releases`
     );
     const releases = await res.json();
 
-    selector.innerHTML = "";
+    selector.innerHTML="";
 
     releases.sort(
-      (a, b) => new Date(b.published_at) - new Date(a.published_at)
+      (a,b)=>new Date(b.published_at)-new Date(a.published_at)
     );
 
-    releases.forEach(rel => {
-      const apk = rel.assets?.find(a => a.name.endsWith(".apk"));
-      if (!apk) return;
+    releases.forEach(rel=>{
+      const apk = rel.assets?.find(a=>a.name.endsWith(".apk"));
+      if(!apk) return;
 
-      const option = document.createElement("option");
-      option.value = apk.browser_download_url;
-      option.textContent = rel.tag_name || rel.name || "Versión sin nombre";
+      const op = document.createElement("option");
+      op.value = apk.browser_download_url;
+      op.textContent = rel.tag_name || rel.name || "Versión sin nombre";
 
-      option.dataset.size =
-        (apk.size / 1024 / 1024).toFixed(2) + " MB";
-      option.dataset.date = rel.published_at;
-      option.dataset.notes =
-        rel.body ? rel.body.replace(/\n/g, "<br>") : "Sin notas";
+      op.dataset.size = (apk.size/1024/1024).toFixed(2)+" MB";
+      op.dataset.date = rel.published_at;
+      op.dataset.notes =
+        (rel.body||"Sin notas").replace(/\n/g,"<br>");
 
-      selector.appendChild(option);
+      selector.appendChild(op);
     });
 
-    if (selector.options.length > 0) {
-      selector.selectedIndex = 0;
+    if(selector.options.length){
+      selector.selectedIndex=0;
       updateInfo();
       checkNewVersion();
     }
 
-  } catch (e) {
-    info.innerHTML = "❌ Error cargando versiones";
+  }catch(e){
+    info.innerHTML="❌ Error cargando versiones";
     console.error(e);
   }
 }
 
-function updateInfo() {
+function updateInfo(){
   const opt = selector.selectedOptions[0];
-
   btn.href = opt.value;
 
-  info.innerHTML = `
+  info.innerHTML=`
     <strong>📝 Notas:</strong><br>${opt.dataset.notes}<br><br>
     <strong>📦 Tamaño:</strong> ${opt.dataset.size}<br>
     <strong>📅 Lanzamiento:</strong>
     ${new Date(opt.dataset.date).toLocaleDateString()}
   `;
 
-  localStorage.setItem(LAST_SEEN, opt.dataset.date);
-  badge.style.display = "none";
+  localStorage.setItem(LAST_SEEN,opt.dataset.date);
+  badge.style.display="none";
 }
 
-function checkNewVersion() {
+function checkNewVersion(){
   const lastSeen = localStorage.getItem(LAST_SEEN);
-  const latestDate = selector.selectedOptions[0].dataset.date;
+  const latest = selector.selectedOptions[0].dataset.date;
 
-  if (!lastSeen || new Date(latestDate) > new Date(lastSeen)) {
-    badge.style.display = "inline-block";
-    toast.style.display = "block";
-    setTimeout(() => toast.style.display = "none", 5000);
+  if(!lastSeen || new Date(latest) > new Date(lastSeen)){
+    badge.style.display="inline-block";
+    toast.style.display="block";
+    setTimeout(()=>toast.style.display="none",5000);
   }
 }
 
-selector.addEventListener("change", updateInfo);
+selector.addEventListener("change",updateInfo);
 loadReleases();
 </script>
 
