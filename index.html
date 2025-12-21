@@ -184,12 +184,10 @@ const LAST_SEEN = "liteLastSeenRelease";
 
 async function loadReleases(){
   try{
-    const res = await fetch(
-      `https://api.github.com/repos/${repo}/releases`
-    );
+    const res = await fetch(`https://api.github.com/repos/${repo}/releases`);
     const releases = await res.json();
 
-    selector.innerHTML="";
+    selector.innerHTML = "";
 
     releases.sort(
       (a,b)=>new Date(b.published_at)-new Date(a.published_at)
@@ -212,7 +210,7 @@ async function loadReleases(){
     });
 
     if(selector.options.length){
-      selector.selectedIndex=0;
+      selector.selectedIndex = 0;
       updateInfo();
       checkNewVersion();
     }
@@ -227,15 +225,12 @@ function updateInfo(){
   const opt = selector.selectedOptions[0];
   btn.href = opt.value;
 
-  info.innerHTML=`
+  info.innerHTML = `
     <strong>📝 Notas:</strong><br>${opt.dataset.notes}<br><br>
     <strong>📦 Tamaño:</strong> ${opt.dataset.size}<br>
     <strong>📅 Lanzamiento:</strong>
     ${new Date(opt.dataset.date).toLocaleDateString()}
   `;
-
-  localStorage.setItem(LAST_SEEN,opt.dataset.date);
-  badge.style.display="none";
 }
 
 function checkNewVersion(){
@@ -243,13 +238,19 @@ function checkNewVersion(){
   const latest = selector.selectedOptions[0].dataset.date;
 
   if(!lastSeen || new Date(latest) > new Date(lastSeen)){
-    badge.style.display="inline-block";
-    toast.style.display="block";
+    badge.style.display = "inline-block";
+    toast.style.display = "block";
     setTimeout(()=>toast.style.display="none",5000);
   }
 }
 
-selector.addEventListener("change",updateInfo);
+btn.addEventListener("click", () => {
+  const opt = selector.selectedOptions[0];
+  localStorage.setItem(LAST_SEEN, opt.dataset.date);
+  badge.style.display = "none";
+});
+
+selector.addEventListener("change", updateInfo);
 loadReleases();
 </script>
 
